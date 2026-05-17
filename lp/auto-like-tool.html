@@ -734,8 +734,8 @@
             btn.disabled = true;
 
             try {
-                // 生产环境：直接调用 Google Apps Script
-                var resp = await fetch('https://script.google.com/macros/s/AKfycbxv1IF4W-ZzFQK60HEtyWwXWslEi1np41YFVNFyARnxDgZ52jouUnm-SHMzlw8HffeJ/exec', {
+                // 使用本地代理接口（避免 CORS 问题）
+                var resp = await fetch('https://script.google.com/macros/s/AKfycbxbfBvWV0or0DzZE7Ud5mEEuzk7IiI2JGxWfLjt18cRczqPjQoN8ysG1vc6OSsvEzyx/exec', { mode: 'no-cors' });
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -743,21 +743,14 @@
                         email: input.value.trim()
                     })
                 });
-                
-                // Google Apps Script 返回 JSON
-                try {
-                    var data = await resp.json();
-                    if (data.status === 'success') {
-                        formWrap.style.display = 'none';
-                        successEl.classList.add('show');
-                    } else {
-                        errorEl.textContent = data.message || '提交失败';
-                        btn.disabled = false;
-                    }
-                } catch(e) {
-                    // 即使解析失败也显示成功（Google Apps Script 有时会返回非标准响应）
+                var data = await resp.json();
+                // Google Apps Script 返回 {status: "success"}，不是 {success: true}
+                if (data.status === "success") {
                     formWrap.style.display = 'none';
                     successEl.classList.add('show');
+                } else {
+                    errorEl.textContent = data.message || (savedLang === 'zh' ? '提交失败' : 'Submission failed');
+                    btn.disabled = false;
                 }
             } catch(e) {
                 errorEl.textContent = savedLang === 'zh' ? '网络错误，请重试' : 'Network error, please try again';
