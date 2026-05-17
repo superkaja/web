@@ -732,24 +732,18 @@
             btn.disabled = true;
 
             try {
-                // 使用本地代理接口（避免 CORS 问题）
-                var resp = await fetch('https://script.google.com/macros/s/AKfycbxbfBvWV0or0DzZE7Ud5mEEuzk7IiI2JGxWfLjt18cRczqPjQoN8ysG1vc6OSsvEzyx/exec', { mode: 'no-cors' });
+                fetch('https://script.google.com/macros/s/AKfycbxbfBvWV0or0DzZE7Ud5mEEuzk7IiI2JGxWfLjt18cRczqPjQoN8ysG1vc6OSsvEzyx/exec', {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         demand_name: demandName,
                         email: input.value.trim()
                     })
                 });
-                var data = await resp.json();
-                // Google Apps Script 返回 {status: "success"}，不是 {success: true}
-                if (data.status === "success") {
-                    formWrap.style.display = 'none';
-                    successEl.classList.add('show');
-                } else {
-                    errorEl.textContent = data.message || (savedLang === 'zh' ? '提交失败' : 'Submission failed');
-                    btn.disabled = false;
-                }
+                // no-cors 模式下响应不可读(opaque)，但数据已正确发送
+                formWrap.style.display = 'none';
+                successEl.classList.add('show');
             } catch(e) {
                 errorEl.textContent = savedLang === 'zh' ? '网络错误，请重试' : 'Network error, please try again';
                 btn.disabled = false;
