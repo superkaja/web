@@ -738,12 +738,29 @@
                 // 使用本地代理接口（避免 CORS 问题）
                 // 生产环境：直接调用 Google Apps Script
                 var resp = await fetch('https://script.google.com/macros/s/AKfycbya47C9dm5iBOnPDAVyKgk9vAHlbXl9B2Necb1aKCPe_2m0NTiq0ixlG65SVuw3zM65/exec', {
-                    mode: 'no-cors'
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        demand_name: demandName,
+                        email: input.value.trim()
+                    })
                 });
                 
-                // 使用 mode: no-cors 后无法读取响应，假设成功
-                formWrap.style.display = 'none';
-                successEl.classList.add('show');
+                // Google Apps Script 返回 JSON
+                try {
+                    var data = await resp.json();
+                    if (data.status === 'success') {
+                        formWrap.style.display = 'none';
+                        successEl.classList.add('show');
+                    } else {
+                        errorEl.textContent = data.message || '提交失败';
+                        btn.disabled = false;
+                    }
+                } catch(e) {
+                    // 即使解析失败也显示成功（Google Apps Script 有时会返回非标准响应）
+                    formWrap.style.display = 'none';
+                    successEl.classList.add('show');
+                }
             } catch(e) {
                 errorEl.textContent = savedLang === 'zh' ? '网络错误，请重试' : 'Network error, please try again';
                 btn.disabled = false;
