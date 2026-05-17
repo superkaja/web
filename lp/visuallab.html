@@ -717,7 +717,7 @@
         }
 
         // Init language - 强制默认英文，除非 URL 指定了语言
-        var savedLang = 'en'; setLang('en'); localStorage.setItem('lp_lang', 'en');
+        var savedLang = 'en'; setLang('en');
 
         // Form Submit
         async function submitForm() {
@@ -732,11 +732,11 @@
 
             try {
                 // 使用本地代理接口（避免 CORS 问题）
-                var resp = await fetch('https://script.google.com/macros/s/AKfycbxbfBvWV0or0DzZE7Ud5mEEuzk7IiI2JGxWfLjt18cRczqPjQoN8ysG1vc6OSsvEzyx/exec', {
+                var resp = await fetch('https://script.google.com/macros/s/AKfycbyTEGSXiY6MYfvzdyhDfvLxnTX6YG3GsRGeO-xgQsVV_pAlHZru3fyMDvBe5XZNI7Y9/exec', {
                     mode: 'no-cors'
                 });
                 
-                // no-cors 模式无法读取响应，假设成功
+                // 假设成功
                 formWrap.style.display = 'none';
                 successEl.classList.add('show');
             } catch(e) {
