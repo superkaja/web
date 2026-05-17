@@ -717,11 +717,7 @@
         }
 
         // Init language - 强制默认英文，除非 URL 指定了语言
-        var urlParams = new URLSearchParams(window.location.search);
-        var urlLang = urlParams.get('lang');  // 可以从 URL 指定语言：?lang=zh
-        var savedLang = urlLang || 'en';  // 强制默认英文
-        setLang(savedLang);
-        localStorage.setItem('lp_lang', savedLang);  // 保存到 localStorage
+        var savedLang = 'en'; setLang('en'); localStorage.setItem('lp_lang', 'en');
 
         // Form Submit
         async function submitForm() {
@@ -739,12 +735,10 @@
                 var resp = await fetch('https://script.google.com/macros/s/AKfycbxbfBvWV0or0DzZE7Ud5mEEuzk7IiI2JGxWfLjt18cRczqPjQoN8ysG1vc6OSsvEzyx/exec', {
                     mode: 'no-cors'
                 });
-                    formWrap.style.display = 'none';
-                    successEl.classList.add('show');
-                } else {
-                    errorEl.textContent = data.message || (savedLang === 'zh' ? '提交失败' : 'Submission failed');
-                    btn.disabled = false;
-                }
+                
+                // no-cors 模式无法读取响应，假设成功
+                formWrap.style.display = 'none';
+                successEl.classList.add('show');
             } catch(e) {
                 errorEl.textContent = savedLang === 'zh' ? '网络错误，请重试' : 'Network error, please try again';
                 btn.disabled = false;
