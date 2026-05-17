@@ -716,12 +716,10 @@
             localStorage.setItem('lp_lang', lang);
         }
 
-        // Init language - 强制默认英文，除非 URL 指定了语言
-        var urlParams = new URLSearchParams(window.location.search);
-        var urlLang = urlParams.get('lang');  // 可以从 URL 指定语言：?lang=zh
-        var savedLang = urlLang || 'en';  // 强制默认英文
-        setLang(savedLang);
-        localStorage.setItem('lp_lang', savedLang);  // 保存到 localStorage
+        // 强制默认英文，禁用语言切换
+        var savedLang = 'en';
+        setLang('en');
+        localStorage.setItem('lp_lang', 'en');
 
         // Form Submit
         async function submitForm() {
