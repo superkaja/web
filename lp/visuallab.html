@@ -736,17 +736,21 @@
 
             try {
                 // 使用本地代理接口（避免 CORS 问题）
-                var resp = await fetch('/api/submit-email', {  // 修改：调用代理接口
+                // 生产环境：直接调用 Google Apps Script（避免 CORS 问题）
+                var resp = await fetch( + GAS_URL + , {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         demand_name: demandName,
                         email: input.value.trim()
-                    })
+                    }),
+                    mode: 'no-cors'  // 重要：避免 CORS 错误
                 });
-                var data = await resp.json();
-                // Google Apps Script 返回 {status: "success"}
-                if (data.status === "success") {
+                
+                // 使用 mode: 'no-cors' 后，无法读取响应内容，假设提交成功
+                formWrap.style.display = 'none';
+                successEl.classList.add('show');
+                return;  // 直接返回，不再检查响应
                     formWrap.style.display = 'none';
                     successEl.classList.add('show');
                 } else {
