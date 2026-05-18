@@ -3,33 +3,44 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>视觉辅助编程工具</title>
+    <title>VisualLab - 视觉辅助编程工具</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #F8F8F6;
-            --fg: #111111;
-            --fg-muted: #6B6B6B;
-            --accent: #E8630A;
-            --accent-light: #FEF0E6;
-            --border: #E5E5E3;
-            --card: #FFFFFF;
+            --bg: #050505;
+            --bg-elevated: #0A0A0A;
+            --fg: #FAFAFA;
+            --fg-muted: #7A7A7A;
+            --accent: #00D4AA;
+            --accent-soft: rgba(0,212,170,0.1);
+            --accent-glow: rgba(0,212,170,0.3);
+            --border: rgba(255,255,255,0.08);
+            --card: #0F0F0F;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
-
         body {
             font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--fg);
-            line-height: 1.65;
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Top Bar ── */
+        /* 背景网格 */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top Bar */
         .topbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -37,21 +48,31 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 40px;
+            padding: 0 32px;
             height: 56px;
-            background: rgba(248,248,246,0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(5,5,5,0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
         }
         .topbar-logo {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             color: var(--fg);
-            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.02em;
         }
-
-        /* Language Toggle */
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent) 0%, #00A88A 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .lang-toggle {
             display: flex;
             align-items: center;
@@ -75,130 +96,197 @@
         .lang-btn.active {
             background: var(--card);
             color: var(--fg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
-        /* ── Hero ── */
+        /* Hero - 全宽视觉冲击 */
         .hero {
+            position: relative;
+            z-index: 1;
             min-height: 100dvh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            padding-top: 56px;
-        }
-        .hero-left {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 80px 60px 80px max(40px, calc((100vw - 960px) / 2));
-        }
-        .hero-right {
-            display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 80px max(40px, calc((100vw - 960px) / 2)) 80px 40px;
-            background: var(--fg);
-            position: relative;
-            overflow: hidden;
+            text-align: center;
+            padding: 120px 32px 80px;
         }
-        .hero-right::before {
+        .hero::before {
             content: '';
             position: absolute;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(232,99,10,0.15) 0%, transparent 70%);
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
             pointer-events: none;
+            opacity: 0.4;
+            filter: blur(80px);
         }
-        .hero-eyebrow {
+        .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 11px;
+            padding: 8px 16px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(0,212,170,0.2);
+            border-radius: 24px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
             color: var(--accent);
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            letter-spacing: 0.02em;
         }
-        .hero-eyebrow::before {
-            content: '';
-            display: block;
-            width: 24px;
-            height: 2px;
-            background: var(--accent);
-        }
-        h1 {
-            font-size: clamp(32px, 4.5vw, 52px);
+        .hero h1 {
+            font-size: clamp(40px, 7vw, 72px);
             font-weight: 700;
-            line-height: 1.1;
-            letter-spacing: -0.035em;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
             color: var(--fg);
-            margin-bottom: 20px;
+            position: relative;
         }
-        .hero-subtitle {
-            font-size: 17px;
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent) 0%, #00FFD0 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-desc {
+            font-size: 18px;
             color: var(--fg-muted);
             line-height: 1.7;
             margin-bottom: 40px;
-            max-width: 480px;
+            max-width: 560px;
+        }
+        .hero-cta-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .hero-cta {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 28px;
-            background: var(--fg);
-            color: var(--bg);
-            border-radius: 10px;
+            gap: 8px;
+            padding: 16px 32px;
+            background: var(--accent);
+            color: #000;
+            border-radius: 12px;
             font-size: 15px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
-            align-self: flex-start;
+            transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
             font-family: inherit;
         }
         .hero-cta:hover {
-            background: #222;
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 16px 40px var(--accent-glow);
         }
-        .hero-cta:active {
-            transform: scale(0.98) translateY(0);
+        .hero-cta-secondary {
+            background: var(--card);
+            color: var(--fg);
+            border: 1px solid var(--border);
         }
-        .hero-cta svg { transition: transform 0.2s; }
-        .hero-cta:hover svg { transform: translateX(3px); }
+        .hero-cta-secondary:hover {
+            border-color: var(--accent);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+        }
 
-        /* Hero Right - Visual */
-        .hero-visual {
-            width: 100%;
-            max-width: 400px;
+        /* Demo 展示区 - Bento Grid */
+        .demo-section {
             position: relative;
             z-index: 1;
+            padding: 80px 32px 120px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .hero-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 16px;
+        }
+        .demo-card {
+            background: var(--card);
+            border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 32px;
-            backdrop-filter: blur(8px);
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
         }
-        .hero-card-line {
-            height: 10px;
-            background: rgba(255,255,255,0.12);
-            border-radius: 6px;
-            margin-bottom: 12px;
+        .demo-card:hover {
+            border-color: rgba(0,212,170,0.3);
+            transform: translateY(-4px);
         }
-        .hero-card-line:nth-child(2) { width: 75%; }
-        .hero-card-line:nth-child(3) { width: 60%; margin-bottom: 24px; }
-        .hero-card-line:nth-child(4) { width: 90%; height: 60px; background: rgba(232,99,10,0.3); }
-        .hero-card-line:nth-child(5) { width: 45%; }
+        .demo-card-large {
+            grid-row: span 2;
+        }
+        .demo-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .demo-card-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-soft);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .demo-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--fg);
+        }
+        .demo-preview {
+            background: var(--bg);
+            border-radius: 12px;
+            height: 100%;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .demo-preview-large {
+            min-height: 400px;
+        }
+        .code-block {
+            font-family: 'Geist Mono', monospace;
+            font-size: 13px;
+            color: var(--fg-muted);
+            text-align: left;
+            padding: 20px;
+            width: 100%;
+        }
+        .code-line {
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
+        .code-line.highlight {
+            opacity: 1;
+            color: var(--accent);
+        }
+        .code-line .keyword { color: #FF79C6; }
+        .code-line .string { color: #F1FA8C; }
+        .code-line .comment { color: #6272A4; }
 
-        /* ── Pain ── */
-        .section {
-            padding: 100px max(40px, calc((100vw - 960px) / 2));
+        /* Capabilities - 横向卡片 */
+        .capabilities {
+            position: relative;
+            z-index: 1;
+            padding: 100px 32px;
+            background: var(--bg-elevated);
+        }
+        .capabilities-inner {
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .section-label {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.12em;
             text-transform: uppercase;
@@ -206,139 +294,128 @@
             margin-bottom: 12px;
         }
         .section-title {
-            font-size: clamp(24px, 3vw, 36px);
+            font-size: clamp(28px, 4vw, 44px);
             font-weight: 700;
-            letter-spacing: -0.025em;
-            margin-bottom: 48px;
-            line-height: 1.2;
+            letter-spacing: -0.03em;
+            margin-bottom: 60px;
+            line-height: 1.15;
         }
-        .pain-grid {
+        .capabilities-list {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 24px;
         }
-        .pain-card {
+        .capability-card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 32px 28px;
-            transition: all 0.25s;
+            padding: 32px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
-        .pain-card:hover {
-            border-color: var(--accent);
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .capability-card:hover::before {
+            opacity: 1;
+        }
+        .capability-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(232,99,10,0.08);
         }
-        .pain-num {
-            font-size: 11px;
+        .capability-num {
+            font-size: 48px;
             font-weight: 700;
-            color: var(--accent);
-            font-family: 'Geist Mono', monospace;
-            margin-bottom: 16px;
-            letter-spacing: 0.05em;
+            color: rgba(255,255,255,0.06);
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            line-height: 1;
         }
-        .pain-text {
-            font-size: 15px;
-            color: var(--fg-muted);
-            line-height: 1.7;
-        }
-
-        /* ── Solution ── */
-        .solution {
-            background: var(--fg);
-            color: var(--bg);
-        }
-        .solution .section-label { color: rgba(232,99,10,0.9); }
-        .solution .section-title { color: var(--bg); }
-        .solution-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-        .solution-desc {
-            font-size: 17px;
-            color: rgba(248,248,246,0.65);
-            line-height: 1.8;
-            margin-bottom: 40px;
-        }
-        .solution-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 28px;
-            background: var(--accent);
-            color: #fff;
-            border-radius: 10px;
-            font-size: 15px;
+        .capability-title {
+            font-size: 18px;
             font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            font-family: inherit;
+            margin-bottom: 12px;
+            color: var(--fg);
         }
-        .solution-cta:hover {
-            background: #CC5509;
-            transform: translateY(-2px);
-        }
-        .solution-cta:active {
-            transform: scale(0.98) translateY(0);
-        }
-        .solution-visual {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .feat-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 14px;
-            padding: 24px 28px;
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            transition: all 0.2s;
-        }
-        .feat-card:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(6px);
-        }
-        .feat-icon {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            background: rgba(232,99,10,0.2);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .feat-title {
+        .capability-desc {
             font-size: 14px;
-            font-weight: 600;
-            color: var(--bg);
-            margin-bottom: 4px;
-        }
-        .feat-desc {
-            font-size: 13px;
-            color: rgba(248,248,246,0.5);
+            color: var(--fg-muted);
             line-height: 1.6;
         }
 
-        /* ── CTA ── */
-        .cta-section {
-            padding: 100px max(40px, calc((100vw - 960px) / 2));
+        /* Tech Stack */
+        .tech-stack {
+            position: relative;
+            z-index: 1;
+            padding: 100px 32px;
+        }
+        .tech-inner {
+            max-width: 1200px;
+            margin: 0 auto;
             text-align: center;
         }
+        .tech-icons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 48px;
+            flex-wrap: wrap;
+        }
+        .tech-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .tech-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--fg-muted);
+            transition: all 0.2s;
+        }
+        .tech-item:hover .tech-icon {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .tech-label {
+            font-size: 13px;
+            color: var(--fg-muted);
+        }
+
+        /* CTA */
+        .cta-section {
+            position: relative;
+            z-index: 1;
+            padding: 120px 32px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 100%);
+        }
         .cta-inner {
-            max-width: 560px;
+            max-width: 520px;
             margin: 0 auto;
         }
         .cta-title {
-            font-size: clamp(24px, 3.5vw, 40px);
+            font-size: clamp(28px, 4vw, 40px);
             font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 12px;
-            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
         }
         .cta-subtitle {
             font-size: 16px;
@@ -349,68 +426,68 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-width: 420px;
+            max-width: 400px;
             margin: 0 auto 16px;
         }
         .form-input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 16px 18px;
             background: var(--card);
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
             font-size: 15px;
             font-family: inherit;
             color: var(--fg);
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
-        .form-input::placeholder { color: #aaa; }
+        .form-input::placeholder { color: var(--fg-muted); }
         .form-input:focus {
             outline: none;
             border-color: var(--accent);
         }
         .form-btn {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background: var(--accent);
-            color: #fff;
+            color: #000;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s;
             font-family: inherit;
         }
-        .form-btn:hover { background: #CC5509; transform: translateY(-1px); }
-        .form-btn:active { transform: scale(0.98) translateY(0); }
+        .form-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 32px var(--accent-glow); }
         .form-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
         .form-privacy {
             font-size: 12px;
-            color: #aaa;
-            text-align: center;
+            color: var(--fg-muted);
         }
         .form-success {
             display: none;
             padding: 32px;
-            background: var(--accent-light);
-            border: 1px solid rgba(232,99,10,0.2);
-            border-radius: 14px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(0,212,170,0.2);
+            border-radius: 12px;
             font-size: 15px;
             font-weight: 500;
             color: var(--accent);
         }
         .form-success.show { display: block; }
         .form-error {
-            color: #dc2626;
+            color: #FF6B6B;
             font-size: 13px;
             text-align: left;
             padding: 0 4px;
         }
 
-        /* ── Footer ── */
+        /* Footer */
         .footer {
+            position: relative;
+            z-index: 1;
             border-top: 1px solid var(--border);
-            padding: 32px max(40px, calc((100vw - 960px) / 2));
+            padding: 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -423,13 +500,17 @@
         }
         .footer-right {
             font-size: 12px;
-            color: #bbb;
+            color: var(--fg-muted);
         }
 
-        /* ── Animations ── */
+        /* Animations */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(28px); }
+            from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
         }
         .animate-in {
             animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) backwards;
@@ -438,56 +519,52 @@
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
         .delay-4 { animation-delay: 0.4s; }
+        .animate-pulse {
+            animation: pulse 4s ease-in-out infinite;
+        }
 
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 900px) {
             .topbar { padding: 0 20px; }
-            .hero {
-                grid-template-columns: 1fr;
-                min-height: auto;
-            }
-            .hero-left {
-                padding: 100px 20px 60px;
-                order: 2;
-            }
-            .hero-right {
-                padding: 60px 20px;
-                order: 1;
-                min-height: 280px;
-            }
-            .pain-grid {
+            .hero { padding: 100px 20px 60px; }
+            .demo-grid {
                 grid-template-columns: 1fr;
             }
-            .solution-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
+            .demo-card-large {
+                grid-row: span 1;
             }
-            .section, .cta-section, .footer {
+            .capabilities-list {
+                grid-template-columns: 1fr;
+            }
+            .cta-section, .footer {
                 padding-left: 20px;
                 padding-right: 20px;
             }
+            .tech-icons {
+                gap: 24px;
+            }
         }
 
-        /* Hidden content by language */
+        /* Language switching */
         [data-lang] { display: none; }
         body[data-active-lang="zh"] [data-lang="zh"] { display: block; }
         body[data-active-lang="en"] [data-lang="en"] { display: block; }
-        /* Inline elements */
         [data-lang-inline] { display: none; }
         body[data-active-lang="zh"] [data-lang-inline="zh"] { display: inline; }
         body[data-active-lang="en"] [data-lang-inline="en"] { display: inline; }
     </style>
 </head>
 <body data-active-lang="zh">
-    <!-- Top Bar -->
+    <div class="bg-grid"></div>
+
     <header class="topbar">
         <div class="topbar-logo">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="vertical-align:middle;margin-right:6px;">
-                <rect width="16" height="16" rx="4" fill="#E8630A"/>
-                <path d="M4 8h8M8 4v8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span data-lang="zh">视觉辅助编程工具</span>
-            <span data-lang="en">Visual Assistant Programming Tool</span>
+            <div class="logo-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 8l3 3 5-5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span>VisualLab</span>
         </div>
         <div class="lang-toggle">
             <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button>
@@ -497,150 +574,193 @@
 
     <!-- Hero -->
     <section class="hero">
-        <div class="hero-left">
-            <div class="hero-eyebrow animate-in delay-1">
-                <span data-lang-inline="zh">效率工具</span>
-                <span data-lang-inline="en">Code Made Clear</span>
-            </div>
-            <h1 class="animate-in delay-2">
-                <span data-lang="zh">让代码更直观，开发更高效</span>
-                <span data-lang="en">Visualize Code, Boost Productivity</span>
-            </h1>
-            <p class="hero-subtitle animate-in delay-3">
-                <span data-lang="zh">可视化代码结构与逻辑流程图，提升理解与调试效率</span>
-                <span data-lang="en">Transform complex code into easy-to-understand visual diagrams for faster debugging and development.</span>
-            </p>
-            <a href="#reserve" class="hero-cta animate-in delay-4">
-                <span data-lang-inline="zh">立即试用</span>
-                <span data-lang-inline="en">Get Started</span>
+        <div class="hero-badge animate-in delay-1">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1L9 5l4 .5-3 3 .7 4.5L7 11l-3.7 2 .7-4.5-3-3L5 5l2-4z" fill="#00D4AA"/>
+            </svg>
+            <span data-lang="zh">AI 驱动的编程助手</span>
+            <span data-lang="en">AI-Powered Coding Assistant</span>
+        </div>
+        <h1 class="animate-in delay-2">
+            <span data-lang="zh">用<span>视觉</span>理解代码</span>
+            <span data-lang="en">See Your Code <span>Visually</span></span>
+        </h1>
+        <p class="hero-desc animate-in delay-3">
+            <span data-lang="zh">将复杂代码结构可视化，AI 辅助理解和优化。让编程变得直观、高效、有趣。</span>
+            <span data-lang="en">Visualize complex code structures with AI-assisted understanding and optimization. Make coding intuitive, efficient, and fun.</span>
+        </p>
+        <div class="hero-cta-group animate-in delay-4">
+            <a href="#reserve" class="hero-cta">
+                <span data-lang="zh">申请内测</span>
+                <span data-lang="en">Request Beta Access</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </a>
+            <a href="#demo" class="hero-cta hero-cta-secondary">
+                <span data-lang="zh">查看演示</span>
+                <span data-lang="en">See Demo</span>
+            </a>
         </div>
-        <div class="hero-right">
-            <div class="hero-visual">
-                <div class="hero-card animate-in delay-2">
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
+    </section>
+
+    <!-- Demo -->
+    <section class="demo-section" id="demo">
+        <div class="demo-grid">
+            <div class="demo-card demo-card-large">
+                <div class="demo-card-header">
+                    <div class="demo-card-icon">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <rect x="2" y="2" width="12" height="12" rx="2" stroke="#00D4AA" stroke-width="1.5"/>
+                            <path d="M5 8h6M8 5v6" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="demo-card-title">
+                        <span data-lang="zh">结构可视化</span>
+                        <span data-lang="en">Structure Visualization</span>
+                    </span>
+                </div>
+                <div class="demo-preview demo-preview-large">
+                    <div class="code-block">
+                        <div class="code-line highlight"><span class="keyword">function</span> processUser(data) {</div>
+                        <div class="code-line">  <span class="keyword">const</span> user = parseData(data);</div>
+                        <div class="code-line">  <span class="keyword">if</span> (user.isValid) {</div>
+                        <div class="code-line highlight">    <span class="keyword">return</span> transform(user);</div>
+                        <div class="code-line">  }</div>
+                        <div class="code-line">  <span class="keyword">return</span> handleError(user);</div>
+                        <div class="code-line">}</div>
+                        <div class="code-line comment" style="margin-top:16px">// VisualLab 高亮关键路径</div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-card">
+                <div class="demo-card-header">
+                    <div class="demo-card-icon">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 3v10M3 8h10" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="demo-card-title">
+                        <span data-lang="zh">智能补全</span>
+                        <span data-lang="en">Smart Completion</span>
+                    </span>
+                </div>
+                <div class="demo-preview">
+                    <div class="code-block">
+                        <div class="code-line">user.</div>
+                        <div class="code-line highlight">getName() <span class="comment">// AI 建议</span></div>
+                        <div class="code-line">getEmail()</div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-card">
+                <div class="demo-card-header">
+                    <div class="demo-card-icon">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <circle cx="8" cy="8" r="5" stroke="#00D4AA" stroke-width="1.5"/>
+                            <path d="M8 5v3l2 2" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="demo-card-title">
+                        <span data-lang="zh">实时分析</span>
+                        <span data-lang="en">Live Analysis</span>
+                    </span>
+                </div>
+                <div class="demo-preview">
+                    <div class="code-block">
+                        <div class="code-line">Complexity: <span class="highlight">O(n)</span></div>
+                        <div class="code-line">Memory: <span class="highlight">OK</span></div>
+                        <div class="code-line">Issues: <span class="keyword">0</span></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pain Points -->
-    <section class="section">
-        <div class="section-label">
-            <span data-lang="zh">痛点</span>
-            <span data-lang="en">The Problem</span>
-        </div>
-        <h2 class="section-title">
-            <span data-lang="zh">开发者常遇的难题</span>
-            <span data-lang="en">The Challenges Developers Face</span>
-        </h2>
-        <div class="pain-grid">
-            <div class="pain-card">
-                <div class="pain-num">01</div>
-                <p class="pain-text">
-                    <span data-lang="zh">复杂代码难以快速理解，影响开发进度</span>
-                    <span data-lang="en">Struggling to understand tangled code structures without a clear visual guide.</span>
-                </p>
+    <!-- Capabilities -->
+    <section class="capabilities">
+        <div class="capabilities-inner">
+            <div class="section-label">
+                <span data-lang="zh">核心能力</span>
+                <span data-lang="en">Core Capabilities</span>
             </div>
-            <div class="pain-card">
-                <div class="pain-num">02</div>
-                <p class="pain-text">
-                    <span data-lang="zh">调试时缺乏清晰逻辑图，容易出错</span>
-                    <span data-lang="en">Spending hours manually tracing logic flow in text editors.</span>
-                </p>
-            </div>
-            <div class="pain-card">
-                <div class="pain-num">03</div>
-                <p class="pain-text">
-                    <span data-lang="zh">频繁切换工具，降低整体效率</span>
-                    <span data-lang="en">Frustrated by slow debugging due to lack of intuitive visualization tools.</span>
-                </p>
+            <h2 class="section-title">
+                <span data-lang="zh">重新定义编程体验</span>
+                <span data-lang="en">Redefining the Coding Experience</span>
+            </h2>
+            <div class="capabilities-list">
+                <div class="capability-card">
+                    <div class="capability-num">01</div>
+                    <h3 class="capability-title">
+                        <span data-lang="zh">代码可视化</span>
+                        <span data-lang="en">Code Visualization</span>
+                    </h3>
+                    <p class="capability-desc">
+                        <span data-lang="zh">自动将代码转换为流程图、依赖图、调用链等可视化形式，一眼看懂复杂逻辑。</span>
+                        <span data-lang="en">Automatically convert code to flowcharts, dependency graphs, and call chains. Understand complex logic at a glance.</span>
+                    </p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-num">02</div>
+                    <h3 class="capability-title">
+                        <span data-lang="zh">AI 辅助理解</span>
+                        <span data-lang="en">AI-Assisted Understanding</span>
+                    </h3>
+                    <p class="capability-desc">
+                        <span data-lang="zh">选中任意代码片段，AI 即时解释逻辑、指出潜在问题、给出优化建议。</span>
+                        <span data-lang="en">Select any code snippet. AI instantly explains logic, spots issues, and suggests optimizations.</span>
+                    </p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-num">03</div>
+                    <h3 class="capability-title">
+                        <span data-lang="zh">智能重构</span>
+                        <span data-lang="en">Smart Refactoring</span>
+                    </h3>
+                    <p class="capability-desc">
+                        <span data-lang="zh">一键优化代码结构，提升可读性和性能。支持多种编程语言和框架。</span>
+                        <span data-lang="en">One-click code structure optimization for readability and performance. Multiple languages supported.</span>
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Solution -->
-    <section class="section solution">
-        <div class="section-label">
-            <span data-lang="zh">解决方案</span>
-            <span data-lang="en">The Solution</span>
-        </div>
-        <h2 class="section-title">
-            <span data-lang="zh">智能视觉辅助</span>
-            <span data-lang="en">Your Visual Coding Companion</span>
-        </h2>
-        <div class="solution-grid">
-            <div>
-                <p class="solution-desc">
-                    <span data-lang="zh">实时生成代码结构与流程图，支持交互式编辑，提升开发体验</span>
-                    <span data-lang="en">Our tool generates real-time visual code structures and logic flowcharts, making it easier to navigate and debug complex projects.</span>
-                </p>
-                <a href="#reserve" class="solution-cta">
-                    <span data-lang-inline="zh">立即试用</span>
-                    <span data-lang-inline="en">Get Started</span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </a>
+    <!-- Tech Stack -->
+    <section class="tech-stack">
+        <div class="tech-inner">
+            <div class="section-label">
+                <span data-lang="zh">支持技术栈</span>
+                <span data-lang="en">Supported Tech Stack</span>
             </div>
-            <div class="solution-visual">
-                <div class="feat-card">
-                    <div class="feat-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M9 2v14M2 9h14" stroke="#E8630A" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="feat-title">
-                            <span data-lang="zh">可视化结构</span>
-                            <span data-lang="en">Real-Time Visualization</span>
-                        </div>
-                        <div class="feat-desc">
-                            <span data-lang="zh">自动解析代码，生成清晰结构图</span>
-                            <span data-lang="en">See your code structure as you type with instant visual updates.</span>
-                        </div>
-                    </div>
+            <h2 class="section-title">
+                <span data-lang="zh">适配主流开发环境</span>
+                <span data-lang="en">Works With Your Stack</span>
+            </h2>
+            <div class="tech-icons">
+                <div class="tech-item">
+                    <div class="tech-icon">JS</div>
+                    <span class="tech-label">JavaScript</span>
                 </div>
-                <div class="feat-card">
-                    <div class="feat-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M3 9l4 4 8-8" stroke="#E8630A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="feat-title">
-                            <span data-lang="zh">流程图生成</span>
-                            <span data-lang="en">Interactive Flowcharts</span>
-                        </div>
-                        <div class="feat-desc">
-                            <span data-lang="zh">实时生成逻辑流程图，便于理解</span>
-                            <span data-lang="en">Explore and edit logic flows with drag-and-drop simplicity.</span>
-                        </div>
-                    </div>
+                <div class="tech-item">
+                    <div class="tech-icon">TS</div>
+                    <span class="tech-label">TypeScript</span>
                 </div>
-                <div class="feat-card">
-                    <div class="feat-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M9 2l2.5 5 5.5.8-4 3.9.9 5.3L9 14.3l-4.9 2.7.9-5.3-4-3.9 5.5-.8z" stroke="#E8630A" stroke-width="1.5" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="feat-title">
-                            <span data-lang="zh">交互编辑</span>
-                            <span data-lang="en">Smart Code Mapping</span>
-                        </div>
-                        <div class="feat-desc">
-                            <span data-lang="zh">支持直接在图表中修改代码逻辑</span>
-                            <span data-lang="en">Automatically maps code relationships for clearer understanding.</span>
-                        </div>
-                    </div>
+                <div class="tech-item">
+                    <div class="tech-icon">Py</div>
+                    <span class="tech-label">Python</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">Go</div>
+                    <span class="tech-label">Golang</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">Rs</div>
+                    <span class="tech-label">Rust</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">+</div>
+                    <span class="tech-label"><span data-lang="zh">更多</span><span data-lang="en">More</span></span>
                 </div>
             </div>
         </div>
@@ -650,76 +770,56 @@
     <section class="cta-section" id="reserve">
         <div class="cta-inner">
             <h2 class="cta-title">
-                <span data-lang="zh">立即体验，提升效率</span>
-                <span data-lang="en">Start Visualizing Your Code Today</span>
+                <span data-lang="zh">加入内测等待名单</span>
+                <span data-lang="en">Join the Beta Waitlist</span>
             </h2>
             <p class="cta-subtitle">
-                <span data-lang="zh">免费试用，开启高效开发之旅</span>
-                <span data-lang="en">Join thousands of developers who are coding smarter, not harder.</span>
+                <span data-lang="zh">成为首批体验者，用视觉重新认识代码</span>
+                <span data-lang="en">Be among the first to see code differently</span>
             </p>
             <form id="preForm" onsubmit="submitForm(); return false">
                 <div class="form-wrap">
-                    <input
-                        type="email"
-                        class="form-input"
-                        id="emailInput"
-                        placeholder=""
-                        autocomplete="email"
-                        required
-                    >
+                    <input type="email" class="form-input" id="emailInput" placeholder="" autocomplete="email" required>
                     <div class="form-error" id="formError"></div>
                     <button type="submit" class="form-btn" id="submitBtn">
-                        <span data-lang-inline="zh">立即试用</span>
-                        <span data-lang-inline="en">Get Started</span>
+                        <span data-lang="zh">申请内测</span>
+                        <span data-lang="en">Request Access</span>
                     </button>
                 </div>
                 <p class="form-privacy">
-                    <span data-lang="zh">我们尊重你的隐私，不会向第三方透露你的邮箱</span>
-                    <span data-lang="en">We respect your privacy. Your email will never be shared.</span>
+                    <span data-lang="zh">我们会通过邮箱发送内测邀请</span>
+                    <span data-lang="en">We'll send beta invites via email</span>
                 </p>
             </form>
             <div class="form-success" id="formSuccess">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:8px;">
-                    <circle cx="10" cy="10" r="9" stroke="#E8630A" stroke-width="1.5"/>
-                    <path d="M6 10l3 3 5-5" stroke="#E8630A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span data-lang="zh">已收到您的请求</span>
-                <span data-lang="en">Thanks for joining! Check your inbox.</span>
+                <span data-lang="zh">已加入等待名单，我们会尽快联系你</span>
+                <span data-lang="en">You're on the list. We'll be in touch soon.</span>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
-        <p class="footer-note">
-            <span data-lang="zh">提升开发效率，从这里开始</span>
-            <span data-lang="en">Empowering developers with clarity and efficiency.</span>
-        </p>
-        <span class="footer-right">© 2026</span>
+        <p class="footer-note">VisualLab</p>
+        <span class="footer-right">2026</span>
     </footer>
 
     <script>
-        var demandId = 162;
         var demandName = '视觉辅助编程工具';
+        var demandId = 162;
         var lpSlug = 'visuallab';
 
-        // Language Toggle
         function setLang(lang) {
             document.body.dataset.activeLang = lang;
             document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
             document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            // Update placeholder
-            var ph = lang === 'zh'
-                ? '输入邮箱获取试用'
-                : 'Enter your email to get started';
+            var ph = lang === 'zh' ? '输入你的邮箱' : 'Enter your email';
             document.getElementById('emailInput').placeholder = ph;
             localStorage.setItem('lp_lang', lang);
         }
 
-        // Init language - 强制默认英文，除非 URL 指定了语言
-        var savedLang = 'en'; setLang('en');
+        var savedLang = localStorage.getItem('lp_lang') || 'zh';
+        setLang(savedLang);
 
-        // Form Submit
         async function submitForm() {
             var btn = document.getElementById('submitBtn');
             var input = document.getElementById('emailInput');
@@ -731,38 +831,27 @@
             btn.disabled = true;
 
             try {
-                fetch('https://script.google.com/macros/s/AKfycbydXhuHWh3ylKWcHXtQMqrOTNy1fvJaDE7aiCDtsZZjIsykfAPxyFQbus50a4DPgcIi/exec', {
+                var resp = await fetch('/api/submit-email', {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         demand_name: demandName,
                         email: input.value.trim()
                     })
                 });
-                // no-cors 模式下响应不可读(opaque)，但数据已正确发送
-                formWrap.style.display = 'none';
-                successEl.classList.add('show');
+                var data = await resp.json();
+                if (data.status === "success") {
+                    formWrap.style.display = 'none';
+                    successEl.classList.add('show');
+                } else {
+                    errorEl.textContent = data.message || (savedLang === 'zh' ? '提交失败' : 'Submission failed');
+                    btn.disabled = false;
+                }
             } catch(e) {
-                errorEl.textContent = savedLang === 'zh' ? '网络错误，请重试' : 'Network error, please try again';
+                errorEl.textContent = savedLang === 'zh' ? '网络错误' : 'Network error';
                 btn.disabled = false;
             }
         }
-
-        // Intersection Observer for scroll animations
-        var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.section-label, .section-title, .pain-grid, .solution-grid, .cta-inner').forEach(function(el) {
-            el.classList.remove('animate-in');
-            observer.observe(el);
-        });
     </script>
 </body>
 </html>

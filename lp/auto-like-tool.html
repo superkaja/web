@@ -8,28 +8,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #F8F8F6;
-            --fg: #111111;
+            --bg: #FAFAFA;
+            --fg: #0A0A0A;
             --fg-muted: #6B6B6B;
             --accent: #E8630A;
-            --accent-light: #FEF0E6;
+            --accent-soft: #FFF4ED;
             --border: #E5E5E3;
             --card: #FFFFFF;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
-
         body {
             font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--fg);
-            line-height: 1.65;
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Top Bar ── */
+        /* Top Bar */
         .topbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -37,9 +34,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 40px;
-            height: 56px;
-            background: rgba(248,248,246,0.85);
+            padding: 0 32px;
+            height: 52px;
+            background: rgba(250,250,250,0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
@@ -48,10 +45,10 @@
             font-size: 14px;
             font-weight: 600;
             color: var(--fg);
-            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        /* Language Toggle */
         .lang-toggle {
             display: flex;
             align-items: center;
@@ -75,197 +72,58 @@
         .lang-btn.active {
             background: var(--card);
             color: var(--fg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
-        /* ── Hero ── */
+        /* Hero - 全宽深色区块 */
         .hero {
-            min-height: 100dvh;
+            min-h-[100dvh];
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
+            padding: 120px 32px 80px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            padding-top: 56px;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: center;
+            min-height: 100dvh;
         }
         .hero-left {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px 60px 80px max(40px, calc((100vw - 960px) / 2));
+            color: #FFFFFF;
         }
-        .hero-right {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 80px max(40px, calc((100vw - 960px) / 2)) 80px 40px;
-            background: var(--fg);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-right::before {
-            content: '';
-            position: absolute;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(232,99,10,0.15) 0%, transparent 70%);
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-        .hero-eyebrow {
+        .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 11px;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(232,99,10,0.15);
+            border: 1px solid rgba(232,99,10,0.3);
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
             color: var(--accent);
             margin-bottom: 24px;
+            letter-spacing: 0.02em;
         }
-        .hero-eyebrow::before {
-            content: '';
-            display: block;
-            width: 24px;
-            height: 2px;
-            background: var(--accent);
-        }
-        h1 {
-            font-size: clamp(32px, 4.5vw, 52px);
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 56px);
             font-weight: 700;
             line-height: 1.1;
-            letter-spacing: -0.035em;
-            color: var(--fg);
+            letter-spacing: -0.03em;
             margin-bottom: 20px;
+            color: #FFFFFF;
         }
-        .hero-subtitle {
+        .hero-desc {
             font-size: 17px;
-            color: var(--fg-muted);
+            color: rgba(255,255,255,0.6);
             line-height: 1.7;
-            margin-bottom: 40px;
-            max-width: 480px;
+            margin-bottom: 32px;
+            max-width: 440px;
         }
         .hero-cta {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 28px;
-            background: var(--fg);
-            color: var(--bg);
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            align-self: flex-start;
-            font-family: inherit;
-        }
-        .hero-cta:hover {
-            background: #222;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
-        .hero-cta:active {
-            transform: scale(0.98) translateY(0);
-        }
-        .hero-cta svg { transition: transform 0.2s; }
-        .hero-cta:hover svg { transform: translateX(3px); }
-
-        /* Hero Right - Visual */
-        .hero-visual {
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-            z-index: 1;
-        }
-        .hero-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 20px;
-            padding: 32px;
-            backdrop-filter: blur(8px);
-        }
-        .hero-card-line {
-            height: 10px;
-            background: rgba(255,255,255,0.12);
-            border-radius: 6px;
-            margin-bottom: 12px;
-        }
-        .hero-card-line:nth-child(2) { width: 75%; }
-        .hero-card-line:nth-child(3) { width: 60%; margin-bottom: 24px; }
-        .hero-card-line:nth-child(4) { width: 90%; height: 60px; background: rgba(232,99,10,0.3); }
-        .hero-card-line:nth-child(5) { width: 45%; }
-
-        /* ── Pain ── */
-        .section {
-            padding: 100px max(40px, calc((100vw - 960px) / 2));
-        }
-        .section-label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
-        .section-title {
-            font-size: clamp(24px, 3vw, 36px);
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            margin-bottom: 48px;
-            line-height: 1.2;
-        }
-        .pain-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-        .pain-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px 28px;
-            transition: all 0.25s;
-        }
-        .pain-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(232,99,10,0.08);
-        }
-        .pain-num {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--accent);
-            font-family: 'Geist Mono', monospace;
-            margin-bottom: 16px;
-            letter-spacing: 0.05em;
-        }
-        .pain-text {
-            font-size: 15px;
-            color: var(--fg-muted);
-            line-height: 1.7;
-        }
-
-        /* ── Solution ── */
-        .solution {
-            background: var(--fg);
-            color: var(--bg);
-        }
-        .solution .section-label { color: rgba(232,99,10,0.9); }
-        .solution .section-title { color: var(--bg); }
-        .solution-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-        .solution-desc {
-            font-size: 17px;
-            color: rgba(248,248,246,0.65);
-            line-height: 1.8;
-            margin-bottom: 40px;
-        }
-        .solution-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            gap: 8px;
             padding: 14px 28px;
             background: var(--accent);
             color: #fff;
@@ -273,104 +131,279 @@
             font-size: 15px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
             font-family: inherit;
         }
-        .solution-cta:hover {
-            background: #CC5509;
+        .hero-cta:hover {
+            background: #D35A09;
             transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(232,99,10,0.3);
         }
-        .solution-cta:active {
-            transform: scale(0.98) translateY(0);
+        .hero-cta svg { transition: transform 0.2s; }
+        .hero-cta:hover svg { transform: translateX(3px); }
+
+        /* Hero Right - 模拟界面 */
+        .hero-demo {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(8px);
         }
-        .solution-visual {
+        .demo-header {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        .demo-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+        }
+        .demo-dot:first-child { background: #FF5F57; }
+        .demo-dot:nth-child(2) { background: #FEBC2E; }
+        .demo-dot:nth-child(3) { background: #28C840; }
+        .demo-content {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
-        .feat-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 14px;
-            padding: 24px 28px;
+        .demo-row {
             display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            transition: all 0.2s;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            transition: all 0.3s;
         }
-        .feat-card:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(6px);
+        .demo-row:hover {
+            background: rgba(232,99,10,0.1);
+            transform: translateX(4px);
         }
-        .feat-icon {
+        .demo-avatar {
             width: 36px;
             height: 36px;
-            min-width: 36px;
-            background: rgba(232,99,10,0.2);
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(232,99,10,0.3), rgba(232,99,10,0.1));
+        }
+        .demo-text {
+            flex: 1;
+        }
+        .demo-text-line {
+            height: 8px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        .demo-text-line:last-child {
+            width: 60%;
+            margin-bottom: 0;
+        }
+        .demo-action {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .feat-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--bg);
+
+        /* Stats Bar */
+        .stats-bar {
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border);
+            padding: 48px 32px;
+        }
+        .stats-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            text-align: center;
+        }
+        .stat-item {
+            padding: 0 16px;
+        }
+        .stat-num {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--fg);
+            letter-spacing: -0.02em;
             margin-bottom: 4px;
         }
-        .feat-desc {
-            font-size: 13px;
-            color: rgba(248,248,246,0.5);
+        .stat-label {
+            font-size: 14px;
+            color: var(--fg-muted);
+        }
+
+        /* Features - 双列布局 */
+        .features {
+            padding: 100px 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .section-header {
+            margin-bottom: 60px;
+        }
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(28px, 3vw, 40px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-soft);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--fg);
+        }
+        .feature-desc {
+            font-size: 15px;
+            color: var(--fg-muted);
             line-height: 1.6;
         }
 
-        /* ── CTA ── */
+        /* Workflow - 横向流程 */
+        .workflow {
+            background: linear-gradient(180deg, var(--bg) 0%, #FFFFFF 100%);
+            padding: 100px 32px;
+        }
+        .workflow-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .workflow-steps {
+            display: flex;
+            gap: 24px;
+            margin-top: 60px;
+        }
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 32px;
+            right: -12px;
+            width: 24px;
+            height: 2px;
+            background: var(--border);
+        }
+        .step-num {
+            width: 64px;
+            height: 64px;
+            background: var(--fg);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--fg);
+        }
+        .step-desc {
+            font-size: 14px;
+            color: var(--fg-muted);
+            line-height: 1.5;
+        }
+
+        /* CTA */
         .cta-section {
-            padding: 100px max(40px, calc((100vw - 960px) / 2));
+            background: #0A0A0A;
+            padding: 120px 32px;
             text-align: center;
         }
         .cta-inner {
-            max-width: 560px;
+            max-width: 520px;
             margin: 0 auto;
         }
         .cta-title {
-            font-size: clamp(24px, 3.5vw, 40px);
+            font-size: clamp(28px, 4vw, 40px);
             font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 12px;
-            line-height: 1.15;
+            color: #FFFFFF;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
         }
         .cta-subtitle {
             font-size: 16px;
-            color: var(--fg-muted);
+            color: rgba(255,255,255,0.5);
             margin-bottom: 40px;
         }
         .form-wrap {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-width: 420px;
+            max-width: 400px;
             margin: 0 auto 16px;
         }
         .form-input {
             width: 100%;
-            padding: 14px 16px;
-            background: var(--card);
-            border: 1.5px solid var(--border);
+            padding: 16px 18px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
             border-radius: 10px;
             font-size: 15px;
             font-family: inherit;
-            color: var(--fg);
-            transition: border-color 0.2s;
+            color: #FFFFFF;
+            transition: all 0.2s;
         }
-        .form-input::placeholder { color: #aaa; }
+        .form-input::placeholder { color: rgba(255,255,255,0.4); }
         .form-input:focus {
             outline: none;
             border-color: var(--accent);
+            background: rgba(255,255,255,0.08);
         }
         .form-btn {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background: var(--accent);
             color: #fff;
             border: none;
@@ -378,39 +411,39 @@
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s;
             font-family: inherit;
         }
-        .form-btn:hover { background: #CC5509; transform: translateY(-1px); }
+        .form-btn:hover { background: #D35A09; transform: translateY(-1px); }
         .form-btn:active { transform: scale(0.98) translateY(0); }
         .form-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
         .form-privacy {
             font-size: 12px;
-            color: #aaa;
-            text-align: center;
+            color: rgba(255,255,255,0.3);
         }
         .form-success {
             display: none;
             padding: 32px;
-            background: var(--accent-light);
-            border: 1px solid rgba(232,99,10,0.2);
-            border-radius: 14px;
+            background: rgba(232,99,10,0.1);
+            border: 1px solid rgba(232,99,10,0.3);
+            border-radius: 12px;
             font-size: 15px;
             font-weight: 500;
             color: var(--accent);
         }
         .form-success.show { display: block; }
         .form-error {
-            color: #dc2626;
+            color: #FF6B6B;
             font-size: 13px;
             text-align: left;
             padding: 0 4px;
         }
 
-        /* ── Footer ── */
+        /* Footer */
         .footer {
-            border-top: 1px solid var(--border);
-            padding: 32px max(40px, calc((100vw - 960px) / 2));
+            background: #0A0A0A;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -419,75 +452,71 @@
         }
         .footer-note {
             font-size: 13px;
-            color: var(--fg-muted);
+            color: rgba(255,255,255,0.4);
         }
         .footer-right {
             font-size: 12px;
-            color: #bbb;
+            color: rgba(255,255,255,0.25);
         }
 
-        /* ── Animations ── */
+        /* Animations */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(28px); }
+            from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-in {
-            animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) backwards;
+            animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) backwards;
         }
         .delay-1 { animation-delay: 0.1s; }
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
         .delay-4 { animation-delay: 0.4s; }
 
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 900px) {
             .topbar { padding: 0 20px; }
             .hero {
                 grid-template-columns: 1fr;
-                min-height: auto;
-            }
-            .hero-left {
                 padding: 100px 20px 60px;
-                order: 2;
-            }
-            .hero-right {
-                padding: 60px 20px;
-                order: 1;
-                min-height: 280px;
-            }
-            .pain-grid {
-                grid-template-columns: 1fr;
-            }
-            .solution-grid {
-                grid-template-columns: 1fr;
                 gap: 40px;
             }
-            .section, .cta-section, .footer {
+            .hero-demo { order: -1; }
+            .stats-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .workflow-steps {
+                flex-direction: column;
+            }
+            .step:not(:last-child)::after {
+                display: none;
+            }
+            .cta-section, .footer {
                 padding-left: 20px;
                 padding-right: 20px;
             }
         }
 
-        /* Hidden content by language */
+        /* Language switching */
         [data-lang] { display: none; }
         body[data-active-lang="zh"] [data-lang="zh"] { display: block; }
         body[data-active-lang="en"] [data-lang="en"] { display: block; }
-        /* Inline elements */
         [data-lang-inline] { display: none; }
         body[data-active-lang="zh"] [data-lang-inline="zh"] { display: inline; }
         body[data-active-lang="en"] [data-lang-inline="en"] { display: inline; }
     </style>
 </head>
-<body data-active-lang="en">
-    <!-- Top Bar -->
+<body data-active-lang="zh">
     <header class="topbar">
         <div class="topbar-logo">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="vertical-align:middle;margin-right:6px;">
-                <rect width="16" height="16" rx="4" fill="#E8630A"/>
-                <path d="M4 8h8M8 4v8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <rect x="2" y="2" width="14" height="14" rx="4" fill="#E8630A"/>
+                <path d="M6 9h6M9 6v6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <span data-lang="zh">自动点赞互动工具</span>
-            <span data-lang="en">Auto Like Tool</span>
+            <span data-lang="zh">自动点赞工具</span>
+            <span data-lang="en">AutoLike</span>
         </div>
         <div class="lang-toggle">
             <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button>
@@ -498,149 +527,234 @@
     <!-- Hero -->
     <section class="hero">
         <div class="hero-left">
-            <div class="hero-eyebrow animate-in delay-1">
-                <span data-lang-inline="zh">效率工具</span>
-                <span data-lang-inline="en">Social Media Tool</span>
+            <div class="hero-badge animate-in delay-1">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 1l1.8 3.6L13 5.2l-3 2.9.7 4L7 10.2l-3.7 1.9.7-4L1 5.2l4.2-.5L7 1z" fill="#E8630A"/>
+                </svg>
+                <span data-lang="zh">社交效率工具</span>
+                <span data-lang="en">Social Efficiency Tool</span>
             </div>
             <h1 class="animate-in delay-2">
-                <span data-lang="zh">一键互动，解放你的社交时间</span>
-                <span data-lang="en">Automate Your Social Interactions in Seconds</span>
+                <span data-lang="zh">解放你的社交时间</span>
+                <span data-lang="en">Free Your Social Time</span>
             </h1>
-            <p class="hero-subtitle animate-in delay-3">
-                <span data-lang="zh">自动点赞评论，提升社交活跃度，告别手动操作的疲惫</span>
-                <span data-lang="en">Save time and boost your social presence with one-click likes, comments, and more.</span>
+            <p class="hero-desc animate-in delay-3">
+                <span data-lang="zh">一键完成点赞互动，让重复操作自动化。专注于真正重要的内容，而不是机械式的刷屏。</span>
+                <span data-lang="en">Automate repetitive social interactions with one click. Focus on what matters, not manual scrolling.</span>
             </p>
             <a href="#reserve" class="hero-cta animate-in delay-4">
-                <span data-lang-inline="zh">立即获取</span>
-                <span data-lang-inline="en">Get Started</span>
+                <span data-lang="zh">立即领取</span>
+                <span data-lang="en">Get Started</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </a>
         </div>
-        <div class="hero-right">
-            <div class="hero-visual">
-                <div class="hero-card animate-in delay-2">
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
-                    <div class="hero-card-line"></div>
+        <div class="hero-demo animate-in delay-3">
+            <div class="demo-header">
+                <div class="demo-dot"></div>
+                <div class="demo-dot"></div>
+                <div class="demo-dot"></div>
+            </div>
+            <div class="demo-content">
+                <div class="demo-row">
+                    <div class="demo-avatar"></div>
+                    <div class="demo-text">
+                        <div class="demo-text-line"></div>
+                        <div class="demo-text-line"></div>
+                    </div>
+                    <div class="demo-action">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2v12M2 8h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="demo-row">
+                    <div class="demo-avatar"></div>
+                    <div class="demo-text">
+                        <div class="demo-text-line"></div>
+                        <div class="demo-text-line"></div>
+                    </div>
+                    <div class="demo-action">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2v12M2 8h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="demo-row">
+                    <div class="demo-avatar"></div>
+                    <div class="demo-text">
+                        <div class="demo-text-line"></div>
+                        <div class="demo-text-line"></div>
+                    </div>
+                    <div class="demo-action">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2v12M2 8h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pain Points -->
-    <section class="section">
-        <div class="section-label">
-            <span data-lang="zh">痛点</span>
-            <span data-lang="en">The Problem</span>
-        </div>
-        <h2 class="section-title">
-            <span data-lang="zh">你是否也遇到这些困扰？</span>
-            <span data-lang="en">Tired of Manual Social Work?</span>
-        </h2>
-        <div class="pain-grid">
-            <div class="pain-card">
-                <div class="pain-num">01</div>
-                <p class="pain-text">
-                    <span data-lang="zh">每天花大量时间手动点赞，效率低下且容易疲劳</span>
-                    <span data-lang="en">Spending hours liking posts manually without seeing results.</span>
-                </p>
+    <!-- Stats -->
+    <section class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item">
+                <div class="stat-num">3x</div>
+                <div class="stat-label">
+                    <span data-lang="zh">效率提升</span>
+                    <span data-lang="en">Efficiency Boost</span>
+                </div>
             </div>
-            <div class="pain-card">
-                <div class="pain-num">02</div>
-                <p class="pain-text">
-                    <span data-lang="zh">错过重要互动，影响内容曝光和粉丝关系维护</span>
-                    <span data-lang="en">Feeling exhausted from constant scrolling and engagement tasks.</span>
-                </p>
+            <div class="stat-item">
+                <div class="stat-num">85%</div>
+                <div class="stat-label">
+                    <span data-lang="zh">时间节省</span>
+                    <span data-lang="en">Time Saved</span>
+                </div>
             </div>
-            <div class="pain-card">
-                <div class="pain-num">03</div>
-                <p class="pain-text">
-                    <span data-lang="zh">重复性操作让人厌倦，降低社交积极性</span>
-                    <span data-lang="en">Missing out on content exposure due to slow interaction rates.</span>
-                </p>
+            <div class="stat-item">
+                <div class="stat-num">多平台</div>
+                <div class="stat-label">
+                    <span data-lang="zh">一站式支持</span>
+                    <span data-lang="en">Multi-Platform</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">0</div>
+                <div class="stat-label">
+                    <span data-lang="zh">学习成本</span>
+                    <span data-lang="en">Learning Curve</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Solution -->
-    <section class="section solution">
-        <div class="section-label">
-            <span data-lang="zh">解决方案</span>
-            <span data-lang="en">The Solution</span>
+    <!-- Features -->
+    <section class="features">
+        <div class="section-header">
+            <div class="section-label">
+                <span data-lang="zh">核心功能</span>
+                <span data-lang="en">Core Features</span>
+            </div>
+            <h2 class="section-title">
+                <span data-lang="zh">简单、直接、高效</span>
+                <span data-lang="en">Simple. Direct. Efficient.</span>
+            </h2>
         </div>
-        <h2 class="section-title">
-            <span data-lang="zh">智能互动解决方案</span>
-            <span data-lang="en">Smart Social Automation</span>
-        </h2>
-        <div class="solution-grid">
-            <div>
-                <p class="solution-desc">
-                    <span data-lang="zh">通过自动化脚本实现一键点赞、评论，提升社交效率与活跃度</span>
-                    <span data-lang="en">Our tool uses automated scripts to like, comment, and engage with posts instantly, boosting your social activity effortlessly.</span>
-                </p>
-                <a href="#reserve" class="solution-cta">
-                    <span data-lang-inline="zh">立即获取</span>
-                    <span data-lang-inline="en">Get Started</span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 4v16M4 12h16" stroke="#E8630A" stroke-width="2" stroke-linecap="round"/>
                     </svg>
-                </a>
+                </div>
+                <h3 class="feature-title">
+                    <span data-lang="zh">批量点赞</span>
+                    <span data-lang="en">Batch Likes</span>
+                </h3>
+                <p class="feature-desc">
+                    <span data-lang="zh">一键完成多条内容点赞，告别重复点击。支持自定义数量和时间间隔。</span>
+                    <span data-lang="en">Like multiple posts with one click. Set custom quantities and intervals.</span>
+                </p>
             </div>
-            <div class="solution-visual">
-                <div class="feat-card">
-                    <div class="feat-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M9 2v14M2 9h14" stroke="#E8630A" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="feat-title">
-                            <span data-lang="zh">一键点赞</span>
-                            <span data-lang="en">One-Click Engagement</span>
-                        </div>
-                        <div class="feat-desc">
-                            <span data-lang="zh">快速完成多平台点赞操作，节省时间</span>
-                            <span data-lang="en">Like and comment on posts with a single click, no more manual effort.</span>
-                        </div>
-                    </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="#E8630A" stroke-width="2"/>
+                        <path d="M12 7v5l3 3" stroke="#E8630A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
-                <div class="feat-card">
-                    <div class="feat-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M3 9l4 4 8-8" stroke="#E8630A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="feat-title">
-                            <span data-lang="zh">智能评论</span>
-                            <span data-lang="en">Time-Saving Automation</span>
-                        </div>
-                        <div class="feat-desc">
-                            <span data-lang="zh">自定义评论内容，提升互动质量</span>
-                            <span data-lang="en">Automate repetitive tasks and focus on what matters most.</span>
-                        </div>
-                    </div>
+                <h3 class="feature-title">
+                    <span data-lang="zh">定时任务</span>
+                    <span data-lang="en">Scheduled Tasks</span>
+                </h3>
+                <p class="feature-desc">
+                    <span data-lang="zh">设置执行时间，工具自动运行。无需人工干预，保持账号活跃度。</span>
+                    <span data-lang="en">Set it and forget it. Automate tasks to keep your account active.</span>
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 7h16M4 12h16M4 17h10" stroke="#E8630A" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <div class="feat-card">
-                    <div class="feat-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M9 2l2.5 5 5.5.8-4 3.9.9 5.3L9 14.3l-4.9 2.7.9-5.3-4-3.9 5.5-.8z" stroke="#E8630A" stroke-width="1.5" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="feat-title">
-                            <span data-lang="zh">定时任务</span>
-                            <span data-lang="en">Boost Your Visibility</span>
-                        </div>
-                        <div class="feat-desc">
-                            <span data-lang="zh">设置互动时间，自动执行不打扰日常使用</span>
-                            <span data-lang="en">Increase your social media presence with consistent and smart interactions.</span>
-                        </div>
-                    </div>
+                <h3 class="feature-title">
+                    <span data-lang="zh">智能筛选</span>
+                    <span data-lang="en">Smart Filtering</span>
+                </h3>
+                <p class="feature-desc">
+                    <span data-lang="zh">按关键词、标签、时间等条件筛选目标内容，精准互动。</span>
+                    <span data-lang="en">Filter by keywords, tags, or time. Engage with the right content.</span>
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="3" width="18" height="18" rx="3" stroke="#E8630A" stroke-width="2"/>
+                        <path d="M9 12l2 2 4-4" stroke="#E8630A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">
+                    <span data-lang="zh">安全可靠</span>
+                    <span data-lang="en">Safe & Secure</span>
+                </h3>
+                <p class="feature-desc">
+                    <span data-lang="zh">本地运行，数据不上传。模拟人工操作节奏，避免平台风控。</span>
+                    <span data-lang="en">Runs locally, no data upload. Mimics human behavior to avoid detection.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow -->
+    <section class="workflow">
+        <div class="workflow-inner">
+            <div class="section-header">
+                <div class="section-label">
+                    <span data-lang="zh">使用流程</span>
+                    <span data-lang="en">How It Works</span>
+                </div>
+                <h2 class="section-title">
+                    <span data-lang="zh">三步开始</span>
+                    <span data-lang="en">Three Steps to Start</span>
+                </h2>
+            </div>
+            <div class="workflow-steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h3 class="step-title">
+                        <span data-lang="zh">安装工具</span>
+                        <span data-lang="en">Install Tool</span>
+                    </h3>
+                    <p class="step-desc">
+                        <span data-lang="zh">下载并安装到本地，无需注册账号</span>
+                        <span data-lang="en">Download and install locally, no account needed</span>
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h3 class="step-title">
+                        <span data-lang="zh">配置规则</span>
+                        <span data-lang="en">Set Rules</span>
+                    </h3>
+                    <p class="step-desc">
+                        <span data-lang="zh">选择平台、设置条件和执行时间</span>
+                        <span data-lang="en">Choose platform, set conditions and schedule</span>
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h3 class="step-title">
+                        <span data-lang="zh">一键运行</span>
+                        <span data-lang="en">Run</span>
+                    </h3>
+                    <p class="step-desc">
+                        <span data-lang="zh">点击开始，工具自动执行任务</span>
+                        <span data-lang="en">Click start, tool runs automatically</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -650,77 +764,59 @@
     <section class="cta-section" id="reserve">
         <div class="cta-inner">
             <h2 class="cta-title">
-                <span data-lang="zh">立即体验高效互动</span>
-                <span data-lang="en">Start Automating Your Social Life Today</span>
+                <span data-lang="zh">开始自动化你的社交</span>
+                <span data-lang="en">Start Automating Today</span>
             </h2>
             <p class="cta-subtitle">
-                <span data-lang="zh">开启自动化社交，提升影响力</span>
-                <span data-lang="en">Join thousands of users who save time and grow their online presence.</span>
+                <span data-lang="zh">留下邮箱，第一时间获取工具</span>
+                <span data-lang="en">Enter your email to get early access</span>
             </p>
             <form id="preForm" onsubmit="submitForm(); return false">
                 <div class="form-wrap">
-                    <input
-                        type="email"
-                        class="form-input"
-                        id="emailInput"
-                        placeholder=""
-                        autocomplete="email"
-                        required
-                    >
+                    <input type="email" class="form-input" id="emailInput" placeholder="" autocomplete="email" required>
                     <div class="form-error" id="formError"></div>
                     <button type="submit" class="form-btn" id="submitBtn">
-                        <span data-lang-inline="zh">立即获取</span>
+                        <span data-lang-inline="zh">立即领取</span>
                         <span data-lang-inline="en">Get Started</span>
                     </button>
                 </div>
                 <p class="form-privacy">
-                    <span data-lang="zh">我们尊重你的隐私，不会向第三方透露你的邮箱</span>
-                    <span data-lang="en">We respect your privacy. Your email will never be shared.</span>
+                    <span data-lang="zh">我们尊重你的隐私，邮箱仅用于发送工具通知</span>
+                    <span data-lang="en">We respect your privacy. Email used only for tool updates.</span>
                 </p>
             </form>
             <div class="form-success" id="formSuccess">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:8px;">
-                    <circle cx="10" cy="10" r="9" stroke="#E8630A" stroke-width="1.5"/>
-                    <path d="M6 10l3 3 5-5" stroke="#E8630A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span data-lang="zh">我们已收到你的请求</span>
-                <span data-lang="en">Thanks for signing up!</span>
+                <span data-lang="zh">已收到你的请求，稍后发送到邮箱</span>
+                <span data-lang="en">Request received. Check your inbox soon.</span>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <p class="footer-note">
-            <span data-lang="zh">提升社交效率，从现在开始</span>
-            <span data-lang="en">Empowering your social media strategy, one click at a time.</span>
+            <span data-lang="zh">让工具帮你完成重复工作</span>
+            <span data-lang="en">Let tools handle the repetitive work</span>
         </p>
-        <span class="footer-right">© 2026</span>
+        <span class="footer-right">2026</span>
     </footer>
 
     <script>
-        var demandName = '自动点赞互动工具';  // 需求名称（中文）
+        var demandName = '自动点赞互动工具';
         var lpSlug = 'auto-like-tool';
 
-        // Language Toggle
         function setLang(lang) {
             document.body.dataset.activeLang = lang;
             document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
             document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            // Update placeholder
-            var ph = lang === 'zh'
-                ? '输入你的邮箱'
-                : 'Enter your email to get started';
+            var ph = lang === 'zh' ? '输入你的邮箱' : 'Enter your email';
             document.getElementById('emailInput').placeholder = ph;
             localStorage.setItem('lp_lang', lang);
         }
 
-        // 强制默认英文，禁用语言切换
-        var savedLang = 'en';
-        setLang('en');
-        localStorage.setItem('lp_lang', 'en');
+        var urlParams = new URLSearchParams(window.location.search);
+        var savedLang = urlParams.get('lang') || localStorage.getItem('lp_lang') || 'zh';
+        setLang(savedLang);
 
-        // Form Submit
         async function submitForm() {
             var btn = document.getElementById('submitBtn');
             var input = document.getElementById('emailInput');
@@ -732,38 +828,27 @@
             btn.disabled = true;
 
             try {
-                fetch('https://script.google.com/macros/s/AKfycbydXhuHWh3ylKWcHXtQMqrOTNy1fvJaDE7aiCDtsZZjIsykfAPxyFQbus50a4DPgcIi/exec', {
+                var resp = await fetch('/api/submit-email', {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         demand_name: demandName,
                         email: input.value.trim()
                     })
                 });
-                // no-cors 模式下响应不可读(opaque)，但数据已正确发送
-                formWrap.style.display = 'none';
-                successEl.classList.add('show');
+                var data = await resp.json();
+                if (data.status === "success") {
+                    formWrap.style.display = 'none';
+                    successEl.classList.add('show');
+                } else {
+                    errorEl.textContent = data.message || (savedLang === 'zh' ? '提交失败' : 'Submission failed');
+                    btn.disabled = false;
+                }
             } catch(e) {
-                errorEl.textContent = savedLang === 'zh' ? '网络错误，请重试' : 'Network error, please try again';
+                errorEl.textContent = savedLang === 'zh' ? '网络错误' : 'Network error';
                 btn.disabled = false;
             }
         }
-
-        // Intersection Observer for scroll animations
-        var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.section-label, .section-title, .pain-grid, .solution-grid, .cta-inner').forEach(function(el) {
-            el.classList.remove('animate-in');
-            observer.observe(el);
-        });
     </script>
 </body>
 </html>
