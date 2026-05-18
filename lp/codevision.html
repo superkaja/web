@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>代码视界 - 让代码更直观</title>
+  <style>
+    /* 双语切换核心样式 */
+    [data-lang] {{ display: none; }}
+    body[data-active-lang="zh"] [data-lang="zh"] {{ display: inline; }}
+    body[data-active-lang="en"] [data-lang="en"] {{ display: inline; }}
+    body[data-active-lang="zh"] [data-lang="zh"][data-lang-block] {{ display: block; }}
+    body[data-active-lang="en"] [data-lang="en"][data-lang-block] {{ display: block; }}
+
+    * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1a1a2e;
+    }}
+
+    /* 导航栏 */
+    header {{
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }}
+
+    nav {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }}
+
+    .logo {{
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }}
+
+    /* 语言切换按钮 - 两个独立按钮 */
+    .lang-toggle {{
+      display: flex;
+      gap: 0.5rem;
+    }}
+
+    .lang-toggle button {{
+      padding: 0.5rem 1rem;
+      border: 2px solid #667eea;
+      background: transparent;
+      color: #667eea;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }}
+
+    .lang-toggle button:hover {{
+      background: #667eea;
+      color: white;
+    }}
+
+    .lang-toggle button.active {{
+      background: #667eea;
+      color: white;
+    }}
+
+    /* 主内容区 */
+    main {{
+      padding: 8rem 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }}
+
+    /* Hero 区域 */
+    .hero {{
+      text-align: center;
+      padding: 4rem 0;
+    }}
+
+    .hero h1 {{
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }}
+
+    .hero .tagline {{
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+    }}
+
+    .hero .description {{
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+    }}
+
+    .cta-button {{
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: white;
+      color: #667eea;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }}
+
+    .cta-button:hover {{
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }}
+
+    /* 功能卡片 */
+    .features {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
+    }}
+
+    .feature-card {{
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }}
+
+    .feature-card:hover {{
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    }}
+
+    .feature-card h3 {{
+      font-size: 1.3rem;
+      color: #667eea;
+      margin-bottom: 1rem;
+    }}
+
+    .feature-card p {{
+      color: #666;
+      line-height: 1.6;
+    }}
+
+    /* 邮箱表单 */
+    .email-form {{
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 3rem;
+      margin-top: 4rem;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }}
+
+    .email-form h2 {{
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #1a1a2e;
+    }}
+
+    .form-group {{
+      display: flex;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }}
+
+    .form-group input {{
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 50px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }}
+
+    .form-group input:focus {{
+      outline: none;
+      border-color: #667eea;
+    }}
+
+    .form-group button {{
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }}
+
+    .form-group button:hover {{
+      transform: scale(1.05);
+    }}
+
+    /* 页脚 */
+    footer {{
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 4rem;
+    }}
+
+    @media (max-width: 768px) {{
+      .hero h1 {{ font-size: 2.5rem; }}
+      .hero .tagline {{ font-size: 1.2rem; }}
+      .form-group {{ flex-direction: column; }}
+      .features {{ grid-template-columns: 1fr; }}
+    }}
+  </style>
+</head>
+<body data-active-lang="zh">
+  <header>
+    <nav>
+      <div class="logo">CodeVision</div>
+      <div class="lang-toggle">
+        <button onclick="setLang('zh')" id="btn-zh" class="active">中文</button>
+        <button onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>
+        <span data-lang="zh">代码视界</span>
+        <span data-lang="en">CodeVision</span>
+      </h1>
+      <p class="tagline">
+        <span data-lang="zh">让代码更直观</span>
+        <span data-lang="en">Make Code More Visual</span>
+      </p>
+      <p class="description" data-lang-block>
+        <span data-lang="zh">通过可视化与AI辅助，轻松理解复杂代码。</span>
+        <span data-lang="en">Visualize and understand complex code with AI assistance.</span>
+      </p>
+      <button class="cta-button" onclick="document.getElementById('email-form').scrollIntoView({{behavior: 'smooth'}})">
+        <span data-lang="zh">立即体验</span>
+        <span data-lang="en">Start Now</span>
+      </button>
+    </section>
+
+    <section class="features">
+      
+<div class="feature-card">
+  <h3>
+    <span data-lang="zh">代码可视化</span>
+    <span data-lang="en">Code Visualization</span>
+  </h3>
+  <p>
+    <span data-lang="zh">将抽象代码转化为直观图形，提升理解效率。</span>
+    <span data-lang="en">Transform abstract code into visual diagrams for better understanding.</span>
+  </p>
+</div>
+
+<div class="feature-card">
+  <h3>
+    <span data-lang="zh">智能解释</span>
+    <span data-lang="en">Smart Explanation</span>
+  </h3>
+  <p>
+    <span data-lang="zh">AI实时解析代码逻辑，助你快速掌握核心内容。</span>
+    <span data-lang="en">AI explains code logic in real-time to help you grasp the core quickly.</span>
+  </p>
+</div>
+
+<div class="feature-card">
+  <h3>
+    <span data-lang="zh">交互式学习</span>
+    <span data-lang="en">Interactive Learning</span>
+  </h3>
+  <p>
+    <span data-lang="zh">通过互动方式深入学习代码结构与功能。</span>
+    <span data-lang="en">Learn code structure and functionality through interactive exploration.</span>
+  </p>
+</div>
+
+    </section>
+
+    <section class="email-form" id="email-form">
+      <h2>
+        <span data-lang="zh">加入早期用户</span>
+        <span data-lang="en">Join Early Users</span>
+      </h2>
+      <form action="/api/submit-email" method="POST">
+        <input type="hidden" name="demand_id" value="162" />
+        <input type="hidden" name="demand_name" value="视觉辅助编程工具" />
+        <div class="form-group">
+          <input type="email" name="email" id="email-input" placeholder="输入您的邮箱" required />
+          <button type="submit">
+            <span data-lang="zh">订阅</span>
+            <span data-lang="en">Subscribe</span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <span data-lang="zh">© 2025 代码视界. 保留所有权利。</span>
+      <span data-lang="en">© 2025 CodeVision. All rights reserved.</span>
+    </p>
+  </footer>
+
+  <script>
+    // 语言切换函数
+    function setLang(lang) {{
+      document.body.dataset.activeLang = lang;
+      localStorage.setItem('lp_lang', lang);
+      
+      // 更新按钮状态
+      document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      
+      // 动态更新 placeholder
+      const emailInput = document.getElementById('email-input');
+      if (emailInput) {{
+        emailInput.placeholder = lang === 'zh' ? '输入您的邮箱' : 'Enter your email';
+      }}
+    }}
+
+    // 恢复用户偏好
+    const saved = localStorage.getItem('lp_lang') || 'zh';
+    setLang(saved);
+  </script>
+</body>
+</html>
