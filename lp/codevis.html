@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeVis - 让代码更直观</title>
+  <script>
+    // 中英文切换逻辑
+    const isChinese = window.location.hash === '#zh';
+    const language = isChinese ? 'zh' : 'en';
+
+    function toggleLanguage() {
+      const newLang = language === 'zh' ? 'en' : 'zh';
+      window.location.hash = `#${newLang}`;
+      document.documentElement.setAttribute('lang', newLang);
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.textContent = el.dataset.lang[newLang];
+      });
+    }
+
+    // 邮箱表单提交处理
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('email-form');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('email').value;
+          const response = await fetch('/api/submit-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, demand_id: 162, demand_name: "视觉辅助编程工具" })
+          });
+          if (response.ok) {
+            alert(language === 'zh' ? '感谢注册！' : 'Thank you for registering!');
+            form.reset();
+          } else {
+            alert(language === 'zh' ? '提交失败，请重试。' : 'Submission failed. Please try again.');
+          }
+        });
+      }
+    });
+  </script>
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #1f2937;
+      --accent: #10b981;
+      --border: #e5e7eb;
+      --card-bg: #ffffff;
+      --card-border: #e5e7eb;
+      --shadow: rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Satoshi', sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.6;
+      transition: all 0.3s ease-in-out;
+    }
+
+    [data-lang] {
+      display: none;
+    }
+
+    [data-lang='en'] {
+      display: block;
+    }
+
+    [data-lang='zh'] {
+      display: block;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    header {
+      padding: 2rem 0;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.25rem;
+      color: #6b7280;
+    }
+
+    .language-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 4rem 0;
+    }
+
+    .feature {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 10px 20px var(--shadow);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .feature:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature p {
+      font-size: 1rem;
+      color: #4b5563;
+    }
+
+    .cta-section {
+      text-align: center;
+      padding: 4rem 0;
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .cta-section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .email-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .email-form input {
+      padding: 0.75rem 1rem;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .email-form button {
+      padding: 0.75rem 1.5rem;
+      background-color: #fff;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .email-form button:hover {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    footer {
+      padding: 2rem 0;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      .features {
+        padding: 2rem 0;
+      }
+
+      .cta-section h2 {
+        font-size: 1.5rem;
+      }
+
+      .email-form input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body lang="en">
+  <div class="container">
+    <header>
+      <h1 data-lang="en">CodeVis - Make Code More Intuitive</h1>
+      <h1 data-lang="zh">CodeVis - 让代码更直观</h1>
+      <p data-lang="en">Visualize and AI-assist your code to improve understanding and efficiency.</p>
+      <p data-lang="zh">通过可视化和AI辅助，提升代码理解和编写效率。</p>
+      <div class="language-toggle" onclick="toggleLanguage()">
+        <span data-lang="en">Toggle Chinese</span>
+        <span data-lang="zh">切换英文</span>
+      </div>
+    </header>
+
+    <section class="features">
+      <div class="feature">
+        <h3 data-lang="en">Code Visualization</h3>
+        <h3 data-lang="zh">代码可视化</h3>
+        <p data-lang="en">Display complex code in a graphical format for easier understanding.</p>
+        <p data-lang="zh">将复杂代码以图形化方式展示，便于理解。</p>
+      </div>
+      <div class="feature">
+        <h3 data-lang="en">AI-Assisted Parsing</h3>
+        <h3 data-lang="zh">AI辅助解析</h3>
+        <p data-lang="en">Intelligent analysis of code logic with real-time explanations.</p>
+        <p data-lang="zh">智能分析代码逻辑，提供实时解释。</p>
+      </div>
+      <div class="feature">
+        <h3 data-lang="en">Interactive Debugging</h3>
+        <h3 data-lang="zh">交互式调试</h3>
+        <p data-lang="en">Debug and optimize code through a graphical interface.</p>
+        <p data-lang="zh">通过图形界面进行代码调试与优化。</p>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2 data-lang="en">Experience CodeVis Now</h2>
+      <h2 data-lang="zh">立即体验 CodeVis</h2>
+      <p data-lang="en">Simplify your coding process with visualizations and AI assistance.</p>
+      <p data-lang="zh">用视觉化和AI简化编程过程，提升开发效率。</p>
+      <form id="email-form" class="email-form">
+        <input type="email" id="email" placeholder="Enter your email" required />
+        <button type="submit" data-lang="en">Subscribe</button>
+        <button type="submit" data-lang="zh">订阅</button>
+      </form>
+    </section>
+  </div>
+  <footer>
+    <p>&copy; 2025 CodeVis. All rights reserved.</p>
+  </footer>
+</body>
+</html>
