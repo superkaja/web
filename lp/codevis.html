@@ -1,261 +1,257 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CodeVis - 让代码更直观</title>
-  <script>
-    // 中英文切换逻辑
-    const isChinese = window.location.hash === '#zh';
-    const language = isChinese ? 'zh' : 'en';
-
-    function toggleLanguage() {
-      const newLang = language === 'zh' ? 'en' : 'zh';
-      window.location.hash = `#${newLang}`;
-      document.documentElement.setAttribute('lang', newLang);
-      document.querySelectorAll('[data-lang]').forEach(el => {
-        el.textContent = el.dataset.lang[newLang];
-      });
-    }
-
-    // 邮箱表单提交处理
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('email-form');
-      if (form) {
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const email = document.getElementById('email').value;
-          const response = await fetch('/api/submit-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, demand_id: 162, demand_name: "视觉辅助编程工具" })
-          });
-          if (response.ok) {
-            alert(language === 'zh' ? '感谢注册！' : 'Thank you for registering!');
-            form.reset();
-          } else {
-            alert(language === 'zh' ? '提交失败，请重试。' : 'Submission failed. Please try again.');
-          }
-        });
-      }
-    });
-  </script>
   <style>
-    :root {
-      --bg: #f9fafb;
-      --text: #1f2937;
-      --accent: #10b981;
-      --border: #e5e7eb;
-      --card-bg: #ffffff;
-      --card-border: #e5e7eb;
-      --shadow: rgba(0, 0, 0, 0.05);
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Satoshi', sans-serif;
-      color: var(--text);
-      background-color: var(--bg);
-      line-height: 1.6;
-      transition: all 0.3s ease-in-out;
-    }
-
     [data-lang] {
       display: none;
     }
-
-    [data-lang='en'] {
+    body[data-active-lang="zh"] [data-lang="zh"] {
+      display: inline;
+    }
+    body[data-active-lang="en"] [data-lang="en"] {
+      display: inline;
+    }
+    body[data-active-lang="zh"] [data-lang="zh"][data-lang-block] {
+      display: block;
+    }
+    body[data-active-lang="en"] [data-lang="en"][data-lang-block] {
       display: block;
     }
 
-    [data-lang='zh'] {
-      display: block;
+    body {
+      font-family: 'Geist', sans-serif;
+      background-color: #f9fafb;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease-in-out;
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 4rem 2rem;
     }
 
     header {
-      padding: 2rem 0;
-      text-align: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
     }
 
-    header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
     }
 
-    header p {
-      font-size: 1.25rem;
-      color: #6b7280;
-    }
-
-    .language-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
+    .lang-toggle button {
+      background: none;
+      border: none;
       cursor: pointer;
-      font-size: 0.9rem;
-      color: #6b7280;
+      font-size: 1rem;
+      margin-left: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+
+    .lang-toggle button:hover {
+      background: #e2e8f0;
+    }
+
+    .hero {
+      text-align: left;
+      padding: 8rem 2rem 4rem;
+      background: linear-gradient(to right, #ffffff, #f9fafb);
+      min-height: 100dvh;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      color: #1e293b;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: #64748b;
+      max-width: 65ch;
+    }
+
+    .cta-button {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      background-color: #3b82f6;
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .cta-button:hover {
+      background-color: #2563eb;
+      transform: scale(1.05);
     }
 
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 2rem;
-      padding: 4rem 0;
+      padding: 4rem 2rem;
+      background: #ffffff;
     }
 
-    .feature {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 1.5rem;
+    .feature-card {
+      background: #f9fafb;
       padding: 2rem;
-      box-shadow: 0 10px 20px var(--shadow);
-      transition: transform 0.3s ease-in-out;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
     }
 
-    .feature:hover {
-      transform: translateY(-5px);
+    .feature-card:hover {
+      transform: translateY(-4px);
     }
 
-    .feature h3 {
-      font-size: 1.25rem;
+    .feature-title {
+      font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: #1e293b;
     }
 
-    .feature p {
+    .feature-desc {
       font-size: 1rem;
-      color: #4b5563;
-    }
-
-    .cta-section {
-      text-align: center;
-      padding: 4rem 0;
-      background-color: var(--accent);
-      color: white;
-    }
-
-    .cta-section h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .cta-section p {
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
+      color: #64748b;
     }
 
     .email-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
+      max-width: 600px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    .email-form input {
-      padding: 0.75rem 1rem;
-      width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
+    .email-form input[type="email"] {
+      width: 100%;
+      padding: 1rem;
       font-size: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      margin-bottom: 1rem;
     }
 
     .email-form button {
-      padding: 0.75rem 1.5rem;
-      background-color: #fff;
-      color: var(--accent);
-      border: 2px solid var(--accent);
-      border-radius: 0.5rem;
-      font-size: 1rem;
+      width: 100%;
+      padding: 1rem;
+      background-color: #3b82f6;
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.3s ease-in-out;
+      transition: background 0.3s ease;
     }
 
     .email-form button:hover {
-      background-color: var(--accent);
-      color: white;
+      background-color: #2563eb;
     }
 
     footer {
-      padding: 2rem 0;
+      padding: 2rem 2rem 1rem;
+      background: #f9fafb;
       text-align: center;
-      color: #6b7280;
+      color: #64748b;
       font-size: 0.9rem;
     }
 
     @media (max-width: 768px) {
-      .container {
-        padding: 0 1rem;
+      .hero {
+        padding: 6rem 1rem 2rem;
+      }
+
+      .hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
       }
 
       .features {
-        padding: 2rem 0;
-      }
-
-      .cta-section h2 {
-        font-size: 1.5rem;
-      }
-
-      .email-form input {
-        width: 100%;
+        padding: 2rem 1rem;
       }
     }
   </style>
 </head>
-<body lang="en">
-  <div class="container">
-    <header>
-      <h1 data-lang="en">CodeVis - Make Code More Intuitive</h1>
-      <h1 data-lang="zh">CodeVis - 让代码更直观</h1>
-      <p data-lang="en">Visualize and AI-assist your code to improve understanding and efficiency.</p>
-      <p data-lang="zh">通过可视化和AI辅助，提升代码理解和编写效率。</p>
-      <div class="language-toggle" onclick="toggleLanguage()">
-        <span data-lang="en">Toggle Chinese</span>
-        <span data-lang="zh">切换英文</span>
+<body data-active-lang="zh">
+  <header>
+    <nav>
+      <div class="lang-toggle">
+        <button onclick="setLang('zh')"><span data-lang="zh">中文</span><span data-lang="en">EN</span></button>
       </div>
-    </header>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1><span data-lang="zh">CodeVis - 让代码更直观</span><span data-lang="en">CodeVis - Make Code Intuitive</span></h1>
+      <p><span data-lang="zh">通过可视化和AI辅助，提升代码理解和编写效率。</span><span data-lang="en">Visualize and enhance code understanding and writing with AI assistance.</span></p>
+      <button class="cta-button" onclick="document.getElementById('email-form').scrollIntoView({behavior: 'smooth'})"><span data-lang="zh">立即体验 CodeVis</span><span data-lang="en">Try CodeVis Now</span></button>
+    </section>
 
     <section class="features">
-      <div class="feature">
-        <h3 data-lang="en">Code Visualization</h3>
-        <h3 data-lang="zh">代码可视化</h3>
-        <p data-lang="en">Display complex code in a graphical format for easier understanding.</p>
-        <p data-lang="zh">将复杂代码以图形化方式展示，便于理解。</p>
+      <div class="feature-card">
+        <h2 class="feature-title"><span data-lang="zh">代码可视化</span><span data-lang="en">Code Visualization</span></h2>
+        <p class="feature-desc"><span data-lang="zh">将复杂代码转换为图形化流程图，直观易懂。</span><span data-lang="en">Convert complex code into visual flowcharts for clarity.</span></p>
       </div>
-      <div class="feature">
-        <h3 data-lang="en">AI-Assisted Parsing</h3>
-        <h3 data-lang="zh">AI辅助解析</h3>
-        <p data-lang="en">Intelligent analysis of code logic with real-time explanations.</p>
-        <p data-lang="zh">智能分析代码逻辑，提供实时解释。</p>
+      <div class="feature-card">
+        <h2 class="feature-title"><span data-lang="zh">AI解释</span><span data-lang="en">AI Explanation</span></h2>
+        <p class="feature-desc"><span data-lang="zh">智能解析代码逻辑，提供自然语言解释。</span><span data-lang="en">Intelligently parse code logic and provide natural language explanations.</span></p>
       </div>
-      <div class="feature">
-        <h3 data-lang="en">Interactive Debugging</h3>
-        <h3 data-lang="zh">交互式调试</h3>
-        <p data-lang="en">Debug and optimize code through a graphical interface.</p>
-        <p data-lang="zh">通过图形界面进行代码调试与优化。</p>
+      <div class="feature-card">
+        <h2 class="feature-title"><span data-lang="zh">实时协作</span><span data-lang="en">Real-Time Collaboration</span></h2>
+        <p class="feature-desc"><span data-lang="zh">多人协同编辑与注释，提升团队开发效率。</span><span data-lang="en">Collaborate in real-time with editing and annotations to boost team efficiency.</span></p>
       </div>
     </section>
 
-    <section class="cta-section">
-      <h2 data-lang="en">Experience CodeVis Now</h2>
-      <h2 data-lang="zh">立即体验 CodeVis</h2>
-      <p data-lang="en">Simplify your coding process with visualizations and AI assistance.</p>
-      <p data-lang="zh">用视觉化和AI简化编程过程，提升开发效率。</p>
-      <form id="email-form" class="email-form">
-        <input type="email" id="email" placeholder="Enter your email" required />
-        <button type="submit" data-lang="en">Subscribe</button>
-        <button type="submit" data-lang="zh">订阅</button>
+    <section class="email-form" id="email-form">
+      <h2><span data-lang="zh">加入我们的早期用户</span><span data-lang="en">Join Our Early Users</span></h2>
+      <form action="/api/submit-email" method="POST">
+        <input type="email" name="email" placeholder="<span data-lang="zh">输入您的邮箱</span><span data-lang="en">Enter your email</span>" required />
+        <button type="submit"><span data-lang="zh">订阅</span><span data-lang="en">Subscribe</span></button>
       </form>
     </section>
-  </div>
+  </main>
+
   <footer>
-    <p>&copy; 2025 CodeVis. All rights reserved.</p>
+    <p><span data-lang="zh">© 2025 CodeVis. 保留所有权利。</span><span data-lang="en">© 2025 CodeVis. All rights reserved.</span></p>
   </footer>
+
+  <script>
+    function setLang(lang) {
+      document.body.dataset.activeLang = lang;
+      localStorage.setItem('lp_lang', lang);
+    }
+
+    // 恢复用户偏好
+    const saved = localStorage.getItem('lp_lang') || 'zh';
+    setLang(saved);
+  </script>
 </body>
 </html>
